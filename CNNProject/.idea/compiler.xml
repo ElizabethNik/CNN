@@ -9,8 +9,8 @@
         <module name="CNNProject" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="8">
-      <module name="CNNProject" target="1.5" />
+    <bytecodeTargetLevel target="15">
+      <module name="CNNProject" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

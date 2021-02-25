@@ -3,11 +3,14 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class CNNAlgorithm {
-    ArrayList<Float> firstImageList;
-    ArrayList<Float> secondImageList;
-    ArrayList<Float> thirdImageList;
+    private final ArrayList<Float> firstImageList;
+    private final ArrayList<Float> secondImageList;
+    private final ArrayList<Float> thirdImageList;
 
-    CNNAlgorithm(String firstImageCSVFile, String secondImageCSVFile, String thirdImageCSVFile) {
+    CNNAlgorithm(String firstImageCSVFile,
+                 String secondImageCSVFile,
+                 String thirdImageCSVFile)
+    {
         ImageUtil firstImage = new ImageUtil(firstImageCSVFile);
         firstImageList = firstImage.getImageList();
 
@@ -22,21 +25,17 @@ public class CNNAlgorithm {
         ImageUtil testImage = new ImageUtil(testImageCSVFile);
         ArrayList<Float> testImageList = testImage.getImageList();
 
-        System.out.println("----- FIRST IMAGE LIST -----");
-        for (float value : firstImageList)
-            System.out.println(String.format("%.2f", value));
-
-        System.out.println("----- SECOND IMAGE LIST -----");
-        for (float value : secondImageList)
-            System.out.println(String.format("%.2f", value));
-
-        System.out.println("----- THIRD IMAGE LIST -----");
-        for (float value : thirdImageList)
-            System.out.println(String.format("%.2f", value));
-
-        System.out.println("----- TEST IMAGE LIST -----");
-        for (float value : testImageList)
-            System.out.println(String.format("%.2f", value));
+        System.out.println("---\t\tFIRST\tSECOND\tTHIRD\t\tTEST\t---");
+        for (int i = 0; i < firstImageList.size(); i++) {
+            String firstImageValue = String.format("%.2f", firstImageList.get(i));
+            String secondImageValue = String.format("%.2f", secondImageList.get(i));
+            String thirdImageValue = String.format("%.2f", thirdImageList.get(i));
+            String testImageValue = String.format("%.2f", testImageList.get(i));
+            System.out.println("---\t\t" + firstImageValue + "\t"
+                    + secondImageValue + "\t"
+                    + thirdImageValue + "\t\t"
+                    + testImageValue + "\t---");
+        }
 
         float similarityWithFIRST = getConformityLevel(firstImageList, testImageList);
         float similarityWithSECOND = getConformityLevel(secondImageList, testImageList);
@@ -76,7 +75,7 @@ public class CNNAlgorithm {
         System.out.println("\nRecognized as class: " + recognizedImage);
     }
 
-    public static float[][] convulateNew(float[][] image, int[][] filter) {
+    public static float[][] convulate(int[][] image, int[][] filter) {
         int imageRows = image.length;
         int filterRows = filter.length;
         int imageCols = image[0].length;
@@ -93,10 +92,10 @@ public class CNNAlgorithm {
                 float pixelCount = 0;
 
                 // Loop through every pixel in the shifted filter zone
-                // Multiply the value with the original filter pixel and calculate avarage
+                // Multiply the value with the original filter pixel and calculate average
                 for (int currentRow = imageRow; currentRow < imageRow + filterRows; currentRow++) {
                     for (int currentCol = imageCol; currentCol < imageCol + filterCols; currentCol++) {
-                        float imagePixelValue = image[currentRow][currentCol];
+                        int imagePixelValue = image[currentRow][currentCol];
                         int filterPixelValue = filter[currentRow - imageRow][currentCol - imageCol];
                         sum += imagePixelValue * filterPixelValue;
                         pixelCount++;
@@ -160,15 +159,15 @@ public class CNNAlgorithm {
         return imageList;
     }
 
-    public static float getConformityLevel(ArrayList<Float> testImageList, ArrayList<Float> originalImageList) {
+    public static float getConformityLevel(ArrayList<Float> originalImageList, ArrayList<Float> testImageList) {
         float testImageSum = 0;
         float originalImageSum = 0;
-        for (int i = 0; i < testImageList.size(); i++) {
-            if (testImageList.get(i) == 1) {
-                testImageSum++;
-                originalImageSum += originalImageList.get(i);
+        for (int i = 0; i < originalImageList.size(); i++) {
+            if (originalImageList.get(i) == 1) {
+                originalImageSum++;
+                testImageSum += testImageList.get(i);
             }
         }
-        return originalImageSum / testImageSum;
+        return testImageSum / originalImageSum;
     }
 }

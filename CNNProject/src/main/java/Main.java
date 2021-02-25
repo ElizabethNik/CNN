@@ -3,6 +3,6 @@ public class Main {
         CNNAlgorithm algorithm = new CNNAlgorithm("src/resources/originalO",
                 "src/resources/originalP",
                 "src/resources/originalX");
-        algorithm.perform("src/resources/testX_1");
+        algorithm.perform("src/resources/testO_1");
     }
 }
